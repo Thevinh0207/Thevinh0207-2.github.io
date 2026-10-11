@@ -1,0 +1,114 @@
+---
+import { Icon } from "astro-icon/components";
+import LinkButton from "./LinkButton.astro";
+import Badge from "../UI/Badge.astro";
+
+interface Props {
+    title: string;
+    description: string;
+    image?: string;
+    tags?: Array<{
+        name: string;
+        class: string;
+        icon: string;
+    }>;
+    link?: string;
+    github?: string;
+    upcoming?: boolean;
+}
+
+const {
+    image,
+    title,
+    description,
+    tags = [],
+    link,
+    github,
+    upcoming = false,
+} = Astro.props;
+
+// Keep cards short: show the first few tags, summarize the rest as "+N"
+const MAX_TAGS = 5;
+const shownTags = tags.slice(0, MAX_TAGS);
+const hiddenTags = tags.slice(MAX_TAGS);
+---
+
+<article
+    class:list={[
+        "group flex h-full flex-col overflow-hidden rounded-2xl border bg-gray-900/50 transition duration-300",
+        upcoming
+            ? "border-dashed border-white/20"
+            : "border-white/10 hover:border-primary/50",
+    ]}
+>
+    {
+        image && (
+            <div class="overflow-clip">
+                <img
+                    alt={title}
+                    class="aspect-video w-full object-cover object-top transition duration-500 group-hover:scale-105"
+                    loading="lazy"
+                    src={image}
+                />
+            </div>
+        )
+    }
+
+    <div class="flex flex-1 flex-col gap-3 p-5">
+        <h3
+            class="text-lg font-bold leading-snug text-white transition-colors duration-300 group-hover:text-primary"
+        >
+            {title}
+        </h3>
+
+        {
+            shownTags.length > 0 && (
+                <ul class="flex flex-wrap gap-1.5">
+                    {shownTags.map((tag) => (
+                        <li>
+                            <Badge
+                                class:list={[
+                                    "flex items-center gap-x-1.5 text-[11px] py-1 px-2 border-white/5",
+                                    tag.class,
+                                ]}
+                            >
+                                <Icon name={tag.icon} class="size-3.5" />
+                                {tag.name}
+                            </Badge>
+                        </li>
+                    ))}
+                    {hiddenTags.length > 0 && (
+                        <li title={hiddenTags.map((t) => t.name).join(", ")}>
+                            <Badge class="flex items-center text-[11px] py-1 px-2 border-white/5 bg-white/5 text-gray-400">
+                                +{hiddenTags.length}
+                            </Badge>
+                        </li>
+                    )}
+                </ul>
+            )
+        }
+
+        <p class="line-clamp-5 text-sm font-light leading-relaxed text-gray-300">
+            {description}
+        </p>
+
+        {
+            !upcoming && (github || link) && (
+                <footer class="mt-auto flex flex-wrap items-center gap-2 pt-2">
+                    {github && (
+                        <LinkButton href={github} size="sm">
+                            <Icon name="lucide:github" class="size-4" />
+                            Source Code
+                        </LinkButton>
+                    )}
+                    {link && (
+                        <LinkButton href={link} size="sm">
+                            <Icon name="lucide:external-link" class="size-4" />
+                            Live Demo
+                        </LinkButton>
+                    )}
+                </footer>
+            )
+        }
+    </div>
+</article>

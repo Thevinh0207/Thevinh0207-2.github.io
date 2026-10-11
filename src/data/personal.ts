@@ -1,18 +1,18 @@
 export const PERSONAL_INFO = {
-    name: "Jhon Doe",
-    title: "Who stands behind the code?",
-    description: "Hi! I'm Jhon Doe, a Full Stack Developer with a passion for building digital experiences that marry form and function. With over 3 years of experience, I've specialized in creating robust architectures and fluid user interfaces.",
-    journey: "My journey started with a curiosity for how things work under the hood, leading me to master modern technologies like Astro, React, and Node.js.",
-    skills: ["🚀 Fast Learner", "💡 Problem Solver", "🤝 Team Player"],
-    heroDescription: "I'm a passionate developer with a strong background in web development and a deep love for creating innovative and user-friendly applications.",
+    name: "The Vinh Voung",
+    title: "Who am I?",
+    description: "a College student at Vanier College in the Computer Science and Technology Program that is searching for an entry level job or internship.",
+    journey: "My journey started when I was a gamer and I kept asking myself how does a game work? How does a computer work? How does the internet work? I was always curious about how things really worked and I wanted to learn more about everything around us. Which, in this modern era of technologies, we are surrounded by everywhere you go.",
+    skills: ["🚀 Fast Learner", "💡 Problem Solver", "🤝 Team Player", "📚 Organized", "🎯 Goal Oriented"],
+    heroDescription: "I am a young and curious student who is interested in learning and exploring new fields to challenge myself and grow as a developer. ",
     resumeUrl: "/",
     socialLinks: [
         {
-            href: "https://www.linkedin.com/",
+            href: "https://www.linkedin.com/in/the-vinh-vuong-6a54533a7/",
             label: "LinkedIn",
         },
-        { href: "https://github.com/", label: "GitHub" },
-        { href: "https://x.com/", label: "Twitter" },
-        { href: "mailto:example@gmail.com", label: "Email" },
+        { href: "https://github.com/Thevinh0207", label: "GitHub" },
+        // { href: "https://x.com/", label: "Twitter" },
+        { href: "mailto:vuongthevinh07@gmail.com", label: "Email" },
     ],
 };

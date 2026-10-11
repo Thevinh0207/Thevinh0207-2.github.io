@@ -1,0 +1,83 @@
+---
+import { Icon } from "astro-icon/components";
+import CardProject from "./CardProject.astro";
+import Section from "../UI/Section.astro";
+import { PROJECTS, UPCOMING_PROJECTS } from "../../data/projects";
+
+// How many finished projects show before the "Show more" button
+const VISIBLE_COUNT = 3;
+const extraCount = Math.max(PROJECTS.length - VISIBLE_COUNT, 0);
+---
+
+<Section id="projects" title="Projects" titleClassName="mb-12">
+    <ul id="projects-grid" class="grid gap-6 lg:grid-cols-3">
+        {
+            PROJECTS.map((project, index) => (
+                <li
+                    class:list={[index >= VISIBLE_COUNT && "hidden"]}
+                    data-extra={index >= VISIBLE_COUNT ? "" : undefined}
+                >
+                    <CardProject {...project} />
+                </li>
+            ))
+        }
+    </ul>
+
+    {
+        extraCount > 0 && (
+            <div class="mt-10 flex justify-center">
+                <button
+                    id="projects-toggle"
+                    type="button"
+                    aria-expanded="false"
+                    aria-controls="projects-grid"
+                    data-count={extraCount}
+                    class="inline-flex items-center justify-center gap-2 rounded-xl border border-gray-600 bg-gray-800 px-4 py-2 text-base text-white transition hover:border-primary/50 hover:bg-gray-700 active:bg-gray-900 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                >
+                    <span data-label>Show {extraCount} more</span>
+                    <span data-icon class="inline-flex transition-transform duration-300">
+                        <Icon name="lucide:chevron-down" class="size-4" />
+                    </span>
+                </button>
+            </div>
+        )
+    }
+
+    {
+        UPCOMING_PROJECTS.length > 0 && (
+            <div class="mt-20">
+                <h3 class="mb-6 text-2xl font-bold text-white">Upcoming</h3>
+                <ul class="grid gap-6 lg:grid-cols-3">
+                    {UPCOMING_PROJECTS.map((project) => (
+                        <li>
+                            <CardProject {...project} upcoming />
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        )
+    }
+</Section>
+
+<script>
+    const toggle = document.getElementById("projects-toggle");
+
+    if (toggle) {
+        const extras = document.querySelectorAll<HTMLElement>("[data-extra]");
+        const label = toggle.querySelector("[data-label]");
+        const icon = toggle.querySelector("[data-icon]");
+        const count = toggle.dataset.count;
+
+        toggle.addEventListener("click", () => {
+            const expanded = toggle.getAttribute("aria-expanded") === "true";
+
+            extras.forEach((el) => el.classList.toggle("hidden", expanded));
+            toggle.setAttribute("aria-expanded", String(!expanded));
+
+            if (label) {
+                label.textContent = expanded ? `Show ${count} more` : "Show fewer";
+            }
+            icon?.classList.toggle("rotate-180", !expanded);
+        });
+    }
+</script>
