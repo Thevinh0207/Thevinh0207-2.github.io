@@ -112,7 +112,7 @@ export const PROJECTS = [
         description:
             "A full-stack AI study platform that generates notes, flashcards, quizzes, and a personalized study plan from user inputs and uploaded files. Built on a secure FastAPI backend with JWT authentication, rate limiting, file validation, and REST APIs, integrating the Groq and Tavily services.",
         link: "",
-        github: "",
+        github: "https://github.com/gvogas/hacks.git",
         image: "/projects/ai-study-assistant.webp",
         tags: [
             TAGS.PYTHON,
@@ -128,7 +128,7 @@ export const PROJECTS = [
         description:
             "A personal finance mobile app built with Flutter and Dart using an MVVM architecture. Uses Firebase Authentication and Firestore for secure data storage, real-time synchronization, and CRUD operations.",
         link: "",
-        github: "",
+        github: "https://github.com/Thevinh0207/finance-tracker-App-dev-2.git",
         image: "/projects/finance-tracker.webp",
         tags: [TAGS.DART, TAGS.FLUTTER, TAGS.GROQ, TAGS.FIREBASE, TAGS.FIRESTORE],
     },
@@ -137,7 +137,7 @@ export const PROJECTS = [
         description:
             "A course team project delivered to a real client, a nail salon, and managed with Agile/Scrum. Handles appointment, customer, and service management through a responsive interface, built with PHP, SlimPHP, and MariaDB on an MVC architecture, with Git-based team collaboration.",
         link: "",
-        github: "",
+        github: "https://github.com/Thevinh0207/SYSTEM-DEVELOPTMENT.git",
         image: "/projects/beauty-salon.webp",
         tags: [
             TAGS.PHP,
@@ -155,7 +155,7 @@ export const PROJECTS = [
         description:
             "A full-stack virtual pet store built with PHP and the Slim Framework. Users can browse and filter pets, submit adoption requests, and chat with an AI assistant powered by Groq, while admins manage pets, users, and approvals from a dashboard. Includes email-based 2FA, bilingual English/French support, and transactional emails.",
         link: "",
-        github: "",
+        github: "https://github.com/OliverDAvino/eCommerceProject.git",
         image: "/projects/petconnect.webp",
         tags: [
             TAGS.PHP,
@@ -169,24 +169,27 @@ export const PROJECTS = [
     },
 ];
 
-// Shown in the "Upcoming" section. No image or links needed.
-// Replace these placeholders with your 3 real upcoming projects.
+// Shown in the "Upcoming" section. Image is optional.
+// Paste a repo URL into `github` to show a "Source Code" button on the card.
 export const UPCOMING_PROJECTS = [
     {
         title: "Fossil Data API",
         description:
             "A team project building a REST API with the Slim framework that combines several public fossil web services (species, habitats, and researchers) into one aggregated JSON dataset.",
+        github: "https://github.com/Thevinh0207/fossil-api.git",
         tags: [TAGS.PHP, TAGS.SLIM],
     },
     {
         title: "Squeeze Benz - 3D Game",
         description: "A 3D game built in Unity with C#.",
+        github: "https://github.com/youngdisciple/squeeze-benz.git",
         tags: [TAGS.UNITY, TAGS.CSHARP],
     },
     {
         title: "IoT Smart Store",
         description:
             "An IoT smart store project built around a Costco use case, using Python and Flask.",
+        github: "https://github.com/youngdisciple/smartshop.git",
         tags: [TAGS.IOT, TAGS.PYTHON, TAGS.FLASK],
     },
-];
+];  

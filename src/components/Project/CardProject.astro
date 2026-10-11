@@ -27,7 +27,7 @@ const {
     upcoming = false,
 } = Astro.props;
 
-// Keep cards short: show the first few tags, summarize the rest as "+N"
+// Keep cards short: show the first few tags, the rest sit behind a clickable "+N"
 const MAX_TAGS = 5;
 const shownTags = tags.slice(0, MAX_TAGS);
 const hiddenTags = tags.slice(MAX_TAGS);
@@ -77,11 +77,31 @@ const hiddenTags = tags.slice(MAX_TAGS);
                             </Badge>
                         </li>
                     ))}
-                    {hiddenTags.length > 0 && (
-                        <li title={hiddenTags.map((t) => t.name).join(", ")}>
-                            <Badge class="flex items-center text-[11px] py-1 px-2 border-white/5 bg-white/5 text-gray-400">
-                                +{hiddenTags.length}
+                    {hiddenTags.map((tag) => (
+                        <li data-extra-tag class="hidden">
+                            <Badge
+                                class:list={[
+                                    "flex items-center gap-x-1.5 text-[11px] py-1 px-2 border-white/5",
+                                    tag.class,
+                                ]}
+                            >
+                                <Icon name={tag.icon} class="size-3.5" />
+                                {tag.name}
                             </Badge>
+                        </li>
+                    ))}
+                    {hiddenTags.length > 0 && (
+                        <li>
+                            <button
+                                type="button"
+                                data-tags-toggle
+                                data-count={hiddenTags.length}
+                                aria-expanded="false"
+                                aria-label="Show or hide more technologies"
+                                class="inline-flex cursor-pointer items-center rounded-full border border-white/10 bg-white/5 px-2 py-1 text-[11px] text-gray-300 transition hover:bg-white/10 hover:text-white focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary"
+                            >
+                                +{hiddenTags.length}
+                            </button>
                         </li>
                     )}
                 </ul>
@@ -93,7 +113,7 @@ const hiddenTags = tags.slice(MAX_TAGS);
         </p>
 
         {
-            !upcoming && (github || link) && (
+            (github || link) && (
                 <footer class="mt-auto flex flex-wrap items-center gap-2 pt-2">
                     {github && (
                         <LinkButton href={github} size="sm">
@@ -112,3 +132,24 @@ const hiddenTags = tags.slice(MAX_TAGS);
         }
     </div>
 </article>
+
+<script>
+    // One listener for every card on the page
+    document.addEventListener("click", (event) => {
+        const toggle = (event.target as HTMLElement).closest<HTMLButtonElement>(
+            "[data-tags-toggle]",
+        );
+        if (!toggle) return;
+
+        const list = toggle.closest("ul");
+        if (!list) return;
+
+        const expanded = toggle.getAttribute("aria-expanded") === "true";
+
+        list.querySelectorAll("[data-extra-tag]").forEach((el) =>
+            el.classList.toggle("hidden", expanded),
+        );
+        toggle.setAttribute("aria-expanded", String(!expanded));
+        toggle.textContent = expanded ? `+${toggle.dataset.count}` : "Show less";
+    });
+</script>
