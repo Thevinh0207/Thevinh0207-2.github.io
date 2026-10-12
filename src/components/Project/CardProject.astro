@@ -36,29 +36,49 @@ const DEFAULT_IMAGE = "/images/default-project.jpg";
 const MAX_TAGS = 5;
 const shownTags = tags.slice(0, MAX_TAGS);
 const hiddenTags = tags.slice(MAX_TAGS);
+
+// Unique id so each popup can be labelled for screen readers
+const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+const titleId = `project-${slug}-title`;
+
+const fallbackImage = `this.onerror=null;this.src='${DEFAULT_IMAGE}';this.classList.remove('object-top');this.classList.add('object-center')`;
 ---
 
 <article
     class:list={[
-        "group flex h-full flex-col overflow-hidden rounded-2xl border bg-gray-900/50 transition duration-300",
+        "group relative flex h-full flex-col overflow-hidden rounded-2xl border bg-gray-900/50 transition duration-300 ease-out will-change-transform hover:z-20 hover:-translate-y-1 hover:scale-[1.03] hover:shadow-2xl hover:shadow-primary/20 motion-reduce:hover:translate-y-0 motion-reduce:hover:scale-100",
         upcoming
             ? "border-dashed border-white/20"
             : "border-white/10 hover:border-primary/50",
     ]}
 >
+    <!-- Invisible button that covers the whole card: clicking anywhere opens the popup -->
+    <button
+        type="button"
+        data-open-project
+        aria-haspopup="dialog"
+        aria-label={`Open details for ${title}`}
+        class="absolute inset-0 z-0 cursor-pointer rounded-2xl focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary"
+    >
+    </button>
+
     {
         (!upcoming || image) && (
-            <div class="overflow-clip">
+            <div class="relative overflow-clip">
                 <img
                     alt={title}
                     class:list={[
-                        "aspect-video w-full object-cover transition duration-500 group-hover:scale-105",
+                        "aspect-video w-full object-cover",
                         image ? "object-top" : "object-center",
                     ]}
                     loading="lazy"
                     src={image || DEFAULT_IMAGE}
-                    onerror={`this.onerror=null;this.src='${DEFAULT_IMAGE}';this.classList.remove('object-top');this.classList.add('object-center')`}
+                    onerror={fallbackImage}
                 />
+                <span class="pointer-events-none absolute right-3 top-3 flex items-center gap-1.5 rounded-full bg-black/60 px-2.5 py-1 text-xs text-white opacity-0 backdrop-blur-sm transition group-hover:opacity-100">
+                    <Icon name="lucide:maximize-2" class="size-3.5" />
+                    View
+                </span>
             </div>
         )
     }
@@ -100,7 +120,7 @@ const hiddenTags = tags.slice(MAX_TAGS);
                         </li>
                     ))}
                     {hiddenTags.length > 0 && (
-                        <li>
+                        <li class="relative z-10">
                             <button
                                 type="button"
                                 data-tags-toggle
@@ -123,7 +143,7 @@ const hiddenTags = tags.slice(MAX_TAGS);
 
         {
             (github || link) && (
-                <footer class="mt-auto flex flex-wrap items-center gap-2 pt-2">
+                <footer class="pointer-events-none relative z-10 mt-auto flex flex-wrap items-center gap-2 pt-2 [&>a]:pointer-events-auto">
                     {github && (
                         <LinkButton href={github} size="sm">
                             <Icon name="lucide:github" class="size-4" />
@@ -140,25 +160,165 @@ const hiddenTags = tags.slice(MAX_TAGS);
             )
         }
     </div>
+
+    <!-- Popup: the project shown in the foreground, large and with all the details -->
+    <dialog
+        data-project-dialog
+        aria-labelledby={titleId}
+        class="project-dialog m-auto max-h-[90vh] w-[min(92vw,56rem)] overflow-y-auto rounded-3xl border border-white/10 bg-gray-950/95 p-0 text-white shadow-2xl backdrop:bg-black/70 backdrop:backdrop-blur-sm"
+    >
+        <div class="relative">
+            <button
+                type="button"
+                data-close-project
+                aria-label="Close"
+                class="absolute right-4 top-4 z-10 inline-flex size-10 cursor-pointer items-center justify-center rounded-full border border-white/20 bg-black/60 text-white backdrop-blur-sm transition hover:bg-black/80 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary"
+            >
+                <Icon name="lucide:x" class="size-5" />
+            </button>
+
+            {
+                (!upcoming || image) && (
+                    <img
+                        alt={title}
+                        class="max-h-[55vh] w-full bg-black/50 object-contain"
+                        loading="lazy"
+                        src={image || DEFAULT_IMAGE}
+                        onerror={fallbackImage}
+                    />
+                )
+            }
+
+            <div class="space-y-5 p-6 md:p-8">
+                <h3 id={titleId} class="pr-10 text-2xl font-bold text-white md:text-3xl">
+                    {title}
+                </h3>
+
+                {
+                    tags.length > 0 && (
+                        <ul class="flex flex-wrap gap-2">
+                            {tags.map((tag) => (
+                                <li>
+                                    <Badge
+                                        class:list={[
+                                            "flex items-center gap-x-1.5 text-xs py-1.5 px-3 border-white/5",
+                                            tag.class,
+                                        ]}
+                                    >
+                                        <Icon name={tag.icon} class="size-4" />
+                                        {tag.name}
+                                    </Badge>
+                                </li>
+                            ))}
+                        </ul>
+                    )
+                }
+
+                <p class="text-base leading-relaxed text-gray-200">{description}</p>
+
+                {
+                    (github || link) && (
+                        <div class="flex flex-wrap items-center gap-3 pt-2">
+                            {github && (
+                                <LinkButton href={github}>
+                                    <Icon name="lucide:github" class="size-5" />
+                                    Source Code
+                                </LinkButton>
+                            )}
+                            {link && (
+                                <LinkButton href={link}>
+                                    <Icon name="lucide:external-link" class="size-5" />
+                                    Live Demo
+                                </LinkButton>
+                            )}
+                        </div>
+                    )
+                }
+            </div>
+        </div>
+    </dialog>
 </article>
 
+<style>
+    .project-dialog[open] {
+        animation: project-pop 0.25s ease-out;
+    }
+
+    @keyframes project-pop {
+        from {
+            opacity: 0;
+            transform: scale(0.96) translateY(8px);
+        }
+
+        to {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .project-dialog[open] {
+            animation: none;
+        }
+    }
+</style>
+
 <script>
-    // One listener for every card on the page
+    // One set of listeners for every card on the page
     document.addEventListener("click", (event) => {
-        const toggle = (event.target as HTMLElement).closest<HTMLButtonElement>(
-            "[data-tags-toggle]",
-        );
-        if (!toggle) return;
+        const target = event.target as HTMLElement;
 
-        const list = toggle.closest("ul");
-        if (!list) return;
+        // "+N" tags toggle
+        const toggle = target.closest<HTMLButtonElement>("[data-tags-toggle]");
+        if (toggle) {
+            const list = toggle.closest("ul");
+            if (!list) return;
 
-        const expanded = toggle.getAttribute("aria-expanded") === "true";
+            const expanded = toggle.getAttribute("aria-expanded") === "true";
 
-        list.querySelectorAll("[data-extra-tag]").forEach((el) =>
-            el.classList.toggle("hidden", expanded),
-        );
-        toggle.setAttribute("aria-expanded", String(!expanded));
-        toggle.textContent = expanded ? `+${toggle.dataset.count}` : "Show less";
+            list.querySelectorAll("[data-extra-tag]").forEach((el) =>
+                el.classList.toggle("hidden", expanded),
+            );
+            toggle.setAttribute("aria-expanded", String(!expanded));
+            toggle.textContent = expanded ? `+${toggle.dataset.count}` : "Show less";
+            return;
+        }
+
+        // Open the project popup
+        const opener = target.closest("[data-open-project]");
+        if (opener) {
+            const dialog = opener
+                .closest("article")
+                ?.querySelector<HTMLDialogElement>("dialog[data-project-dialog]");
+            if (dialog && !dialog.open) {
+                dialog.showModal();
+                document.body.style.overflow = "hidden";
+            }
+            return;
+        }
+
+        // Close button inside the popup
+        const closer = target.closest("[data-close-project]");
+        if (closer) {
+            closer.closest("dialog")?.close();
+            return;
+        }
+
+        // Click on the dark area around the popup
+        if (target instanceof HTMLDialogElement && target.hasAttribute("data-project-dialog")) {
+            target.close();
+        }
     });
+
+    // Runs for every way of closing (button, Esc key, outside click): give scrolling back
+    document.addEventListener(
+        "close",
+        (event) => {
+            const el = event.target as HTMLElement;
+            if (el.matches?.("[data-project-dialog]")) {
+                document.body.style.overflow = "";
+            }
+        },
+        true,
+    );
 </script>

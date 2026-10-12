@@ -180,8 +180,8 @@ export const UPCOMING_PROJECTS = [
         tags: [TAGS.PHP, TAGS.SLIM],
     },
     {
-        title: "Squeeze Benz - 3D Game",
-        description: "A 3D game built in Unity with C#.",
+        title: "Squeeze Benz - 3D Car Game",
+        description: "A 3D car game built in Unity with C#.",
         github: "https://github.com/youngdisciple/squeeze-benz.git",
         tags: [TAGS.UNITY, TAGS.CSHARP],
     },
