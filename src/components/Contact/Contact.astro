@@ -2,23 +2,135 @@
 import { PERSONAL_INFO } from "../../data/personal";
 import Section from "../UI/Section.astro";
 import Title from "../UI/Title.astro";
+
+// Paste your Formspree endpoint here (Formspree dashboard -> your form -> "Integration")
+const FORMSPREE_ENDPOINT = "https://formspree.io/f/mbgdyqyg";
+
+// Shown in the error message if sending fails
+const FALLBACK_EMAIL = "vuongthevinh07@gmail.com";
+
+const inputClass =
+    "w-full rounded-xl border border-white/10 bg-gray-950/60 px-4 py-3 text-white placeholder-gray-500 transition focus:border-primary/60 focus:outline-hidden focus:ring-2 focus:ring-primary/40";
 ---
 
-<Section id="contact" title="Get in Touch" titleClassName="mb-8">
+<Section
+    id="contact"
+    title="Get in Touch"
+    titleClassName="mb-8 text-white! drop-shadow-[0_2px_10px_rgba(0,0,0,0.7)]"
+>
     <p
-        class="text-xl text-gray-400 mb-16 text-center max-w-2xl font-light"
+        class="text-lg md:text-xl text-gray-200 mb-10 text-center max-w-2xl font-normal drop-shadow-[0_1px_6px_rgba(0,0,0,0.8)]"
         data-aos="fade-up"
         data-aos-delay="200"
     >
         I'm always open to discussing new projects, creative ideas or
-        opportunities to be part of a intership.
+        opportunities to be part of an internship.
     </p>
+
+    <!-- Contact form -->
+    <div
+        class="w-full max-w-xl rounded-3xl border border-white/10 bg-gray-900/50 p-6 backdrop-blur-md md:p-8"
+        data-aos="fade-up"
+        data-aos-delay="300"
+    >
+        <form
+            id="contact-form"
+            action={FORMSPREE_ENDPOINT}
+            method="POST"
+            data-email={FALLBACK_EMAIL}
+            class="space-y-5"
+        >
+            <div>
+                <label for="contact-name" class="mb-2 block text-sm text-gray-300">
+                    Name
+                </label>
+                <input
+                    id="contact-name"
+                    name="name"
+                    type="text"
+                    required
+                    maxlength="80"
+                    autocomplete="name"
+                    placeholder="Your name"
+                    class={inputClass}
+                />
+            </div>
+
+            <div>
+                <label for="contact-email" class="mb-2 block text-sm text-gray-300">
+                    Email
+                </label>
+                <input
+                    id="contact-email"
+                    name="email"
+                    type="email"
+                    required
+                    maxlength="120"
+                    autocomplete="email"
+                    placeholder="you@example.com"
+                    class={inputClass}
+                />
+            </div>
+
+            <div>
+                <label for="contact-message" class="mb-2 block text-sm text-gray-300">
+                    Message
+                </label>
+                <textarea
+                    id="contact-message"
+                    name="message"
+                    required
+                    minlength="10"
+                    maxlength="2000"
+                    rows="5"
+                    placeholder="How can I help?"
+                    class={`${inputClass} resize-y`}></textarea>
+            </div>
+
+            <!-- Spam trap: real visitors never see or fill this in -->
+            <input
+                type="text"
+                name="_gotcha"
+                tabindex="-1"
+                autocomplete="off"
+                aria-hidden="true"
+                class="hidden"
+            />
+            <input type="hidden" name="_subject" value="New message from your portfolio" />
+
+            <button
+                id="contact-submit"
+                type="submit"
+                class="block w-full cursor-pointer rounded-xl bg-[#140d7c] px-6 py-4 text-center font-bold text-white drop-shadow-[5px_5px_0_#870deb] transition hover:bg-[#0f0a55] disabled:cursor-not-allowed disabled:opacity-60"
+            >
+                Send message
+            </button>
+
+            <p id="contact-status" role="status" aria-live="polite" class="min-h-6 text-center text-sm"></p>
+        </form>
+    </div>
 
     <!-- Links -->
     <div
-        class="w-full max-w-xl space-y-6"
+        class="mt-14 mb-8 w-full max-w-xl text-center"
         data-aos="fade-up"
         data-aos-delay="400"
+    >
+        <div class="flex items-center gap-4">
+            <span class="hidden h-px flex-1 bg-white/15 sm:block"></span>
+            <h3 class="text-xl font-semibold text-white md:text-2xl">
+                Prefer another way to reach me?
+            </h3>
+            <span class="hidden h-px flex-1 bg-white/15 sm:block"></span>
+        </div>
+        <p class="mt-3 text-base text-gray-300">
+            Say hi on any of these. I'd love to connect.
+        </p>
+    </div>
+    <div
+        class="w-full max-w-xl space-y-6"
+        data-aos="fade-up"
+        data-aos-delay="500"
     >
         {
             PERSONAL_INFO.socialLinks &&
@@ -35,3 +147,60 @@ import Title from "../UI/Title.astro";
         }
     </div>
 </Section>
+
+<script>
+    const form = document.getElementById("contact-form") as HTMLFormElement | null;
+    const button = document.getElementById("contact-submit") as HTMLButtonElement | null;
+    const status = document.getElementById("contact-status");
+
+    function showStatus(message: string, type: "success" | "error") {
+        if (!status) return;
+        status.textContent = message;
+        status.classList.remove("text-green-400", "text-red-400");
+        status.classList.add(type === "success" ? "text-green-400" : "text-red-400");
+    }
+
+    if (form && button && status) {
+        form.addEventListener("submit", async (event) => {
+            event.preventDefault();
+
+            if (form.action.includes("YOUR_FORM_ID")) {
+                showStatus("The form isn't connected yet. Add your Formspree endpoint.", "error");
+                return;
+            }
+
+            const label = button.textContent;
+            button.disabled = true;
+            button.textContent = "Sending...";
+            status.textContent = "";
+
+            try {
+                const response = await fetch(form.action, {
+                    method: "POST",
+                    body: new FormData(form),
+                    headers: { Accept: "application/json" },
+                });
+
+                if (response.ok) {
+                    showStatus("Thanks! Your message was sent.", "success");
+                    form.reset();
+                } else {
+                    const data = await response.json().catch(() => null);
+                    const detail = data?.errors?.map((e: { message: string }) => e.message).join(", ");
+                    showStatus(
+                        detail || `Something went wrong. You can also email me at ${form.dataset.email}.`,
+                        "error",
+                    );
+                }
+            } catch {
+                showStatus(
+                    `Couldn't send your message. You can also email me at ${form.dataset.email}.`,
+                    "error",
+                );
+            } finally {
+                button.disabled = false;
+                button.textContent = label;
+            }
+        });
+    }
+</script>
