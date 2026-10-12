@@ -1,5 +1,5 @@
 export const PERSONAL_INFO = {
-    name: "The Vinh Voung",
+    name: "The Vinh Vuong",
     title: "Who am I?",
     description: "a College student at Vanier College in the Computer Science and Technology Program that is searching for an entry level job or internship.",
     journey: "My journey started when I was a gamer and I kept asking myself how does a game work? How does a computer work? How does the internet work? I was always curious about how things really worked and I wanted to learn more about everything around us. Which, in this modern era of technologies, we are surrounded by it everywhere you go.",
