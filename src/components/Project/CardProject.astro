@@ -27,6 +27,11 @@ const {
     upcoming = false,
 } = Astro.props;
 
+// Shown when a finished project has no image, or its image fails to load.
+// Upcoming projects without an image show no picture at all.
+// Put default-project.jpg in public/images/ (or change this path).
+const DEFAULT_IMAGE = "/images/default-project.jpg";
+
 // Keep cards short: show the first few tags, the rest sit behind a clickable "+N"
 const MAX_TAGS = 5;
 const shownTags = tags.slice(0, MAX_TAGS);
@@ -42,13 +47,17 @@ const hiddenTags = tags.slice(MAX_TAGS);
     ]}
 >
     {
-        image && (
+        (!upcoming || image) && (
             <div class="overflow-clip">
                 <img
                     alt={title}
-                    class="aspect-video w-full object-cover object-top transition duration-500 group-hover:scale-105"
+                    class:list={[
+                        "aspect-video w-full object-cover transition duration-500 group-hover:scale-105",
+                        image ? "object-top" : "object-center",
+                    ]}
                     loading="lazy"
-                    src={image}
+                    src={image || DEFAULT_IMAGE}
+                    onerror={`this.onerror=null;this.src='${DEFAULT_IMAGE}';this.classList.remove('object-top');this.classList.add('object-center')`}
                 />
             </div>
         )
