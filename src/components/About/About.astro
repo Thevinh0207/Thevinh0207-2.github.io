@@ -44,8 +44,13 @@ import Badge from "../UI/Badge.astro";
                 {
                     PERSONAL_INFO.skills &&
                         PERSONAL_INFO.skills.map((skill) => (
-                            <Badge class="px-4 py-2 bg-white/5 text-sm text-gray-400">
-                                {skill}
+                            <Badge class="flex items-center gap-2 px-4 py-2 bg-white/5 text-sm text-gray-400">
+                                <img
+                                    src={skill.icon}
+                                    alt=""
+                                    class="size-5 shrink-0"
+                                />
+                                {skill.label}
                             </Badge>
                         ))
                 }

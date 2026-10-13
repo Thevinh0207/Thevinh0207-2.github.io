@@ -113,7 +113,7 @@ export const PROJECTS = [
             "A full-stack AI study platform that generates notes, flashcards, quizzes, and a personalized study plan from user inputs and uploaded files. Built on a secure FastAPI backend with JWT authentication, rate limiting, file validation, and REST APIs, integrating the Groq and Tavily services.",
         link: "",
         github: "https://github.com/gvogas/hacks.git",
-        image: "/images/mariehacks-demo.png",
+        image: "/projects/mariehacks-demo.png",
         tags: [
             TAGS.PYTHON,
             TAGS.FASTAPI,
@@ -129,7 +129,7 @@ export const PROJECTS = [
             "A personal finance mobile app built with Flutter and Dart using an MVVM architecture. Uses Firebase Authentication and Firestore for secure data storage, real-time synchronization, and CRUD operations.",
         link: "",
         github: "https://github.com/Thevinh0207/finance-tracker-App-dev-2.git",
-        image: "/images/financetracker-demo.png",
+        image: "/projects/financetracker-demo.png",
         tags: [TAGS.DART, TAGS.FLUTTER, TAGS.GROQ, TAGS.FIREBASE, TAGS.FIRESTORE],
     },
     {
@@ -138,7 +138,7 @@ export const PROJECTS = [
             "A course team project delivered to a real client, a nail salon, and managed with Agile/Scrum. Handles appointment, customer, and service management through a responsive interface, built with PHP, SlimPHP, and MariaDB on an MVC architecture, with Git-based team collaboration.",
         link: "",
         github: "https://github.com/Thevinh0207/SYSTEM-DEVELOPTMENT.git",
-        image: "/images/nailsalon-demo.png",
+        image: "/projects/nailsalon-demo.png",
         tags: [
             TAGS.PHP,
             TAGS.SLIM,
@@ -156,7 +156,7 @@ export const PROJECTS = [
             "A full-stack virtual pet store built with PHP and the Slim Framework. Users can browse and filter pets, submit adoption requests, and chat with an AI assistant powered by Groq, while admins manage pets, users, and approvals from a dashboard. Includes email-based 2FA, bilingual English/French support, and transactional emails.",
         link: "",
         github: "https://github.com/OliverDAvino/eCommerceProject.git",
-        image: "/images/petconnect-demo.png",
+        image: "/projects/petconnect-demo.png",
         tags: [
             TAGS.PHP,
             TAGS.SLIM,
